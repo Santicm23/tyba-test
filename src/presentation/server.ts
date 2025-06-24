@@ -8,9 +8,11 @@ import { AppModule } from '@/presentation/app.module';
 import { CustomExceptionFilter } from '@/presentation/common/filters/custom-exception/custom-exception.filter';
 
 async function bootstrap() {
-  const logger = new Logger('Server'); // Create a logger instance for the server
+  // Create a logger instance for the server
+  const logger = new Logger('Server');
 
-  const app = await NestFactory.create(AppModule); // Create the NestJS application
+  // Create the NestJS application
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
     // Use global pipes for validation (ignores unknown properties)
@@ -22,7 +24,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new CustomExceptionFilter());
 
-  app.setGlobalPrefix('api'); // Sets /api as the global prefix for all routes
+  // Sets /api as the global prefix for all routes
+  app.setGlobalPrefix('api');
   app.enableCors({
     // Enable CORS with specified origins and methods
     origin: env.API_ALLOWED_ORIGINS,
