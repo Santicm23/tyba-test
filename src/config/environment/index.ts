@@ -3,14 +3,18 @@ import { existsSync } from 'fs';
 import { Logger } from '@nestjs/common';
 import { z } from 'zod';
 
+// Creating a logger instance
 const logger = new Logger('EnvironmentConfig');
 
+// Define the path to the .env file
 const envPath = '.env';
 
 if (existsSync(envPath)) {
+  // Load environment variables from .env file if it exists
   process.loadEnvFile(envPath);
 }
 
+// Validate environment variables using zod
 const envSchema = z.object({
   API_PORT: z.coerce
     .number()
@@ -22,9 +26,11 @@ const envSchema = z.object({
   JWT_SIGNING_KEY: z.string().min(1, 'JWT_SIGNING_KEY is required'),
 });
 
+// Parse and validate the environment variables
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
+  // Log the error and exit the process if validation fails
   logger.error(
     'Environment variables validation failed:',
     parsed.error.message,
