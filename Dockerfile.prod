@@ -1,0 +1,53 @@
+# Layer 1: Install dependencies
+FROM node:22-alpine3.22 as deps
+
+WORKDIR /usr/src/app
+
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install
+
+# Layer 2: Build the application
+FROM node:22-alpine3.22 as build
+
+WORKDIR /usr/src/app
+
+# Deps from the previous stage
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+
+# Copy all source files
+COPY . .
+
+# Run lints, tests and build the application
+RUN node --run lint
+RUN node --run test
+RUN node --run build
+
+RUN npm ci -f --only=production && npm cache clean --force
+
+RUN npx prisma generate
+
+
+# Layer 3: Production image
+FROM node:22-alpine3.22 as prod
+
+WORKDIR /usr/src/app
+
+
+COPY --from=build /usr/src/app/node_modules ./node_modules
+
+# Copy the DIST folder
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/prisma ./prisma
+
+
+ENV NODE_ENV=production
+
+# Set the user to a non-root user for security
+USER node
+
+
+EXPOSE 3000
+
+CMD [ "sh", "-c", "node --run db:prod && node dist/main.js" ]

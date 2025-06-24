@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:14-alpine
+    restart: always
+    healthcheck:
+      test: 'pg_isready -U ${DB_USER} --dbname=${DB_NAME}'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    container_name: db
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - ${API_PORT}:3000
+    environment:
+      API_ALLOWED_ORIGINS: ${API_ALLOWED_ORIGINS}
+      API_ALLOWED_METHODS: ${API_ALLOWED_METHODS}
+      DB_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY}
+    depends_on:
+      - db
+    env_file:
+      - .env
