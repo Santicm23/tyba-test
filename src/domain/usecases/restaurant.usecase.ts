@@ -5,6 +5,7 @@ import LocationEntity from '@/domain/entities/location.entity';
 import CityEntity from '@/domain/entities/city.entity';
 import TransactionRepository from '@/domain/repositories/transaction.repository';
 import UserEntity from '../entities/user.entity';
+import TransactionEntity from '../entities/transaction.entity';
 
 export default class RestaurantUseCase {
   constructor(
@@ -17,7 +18,12 @@ export default class RestaurantUseCase {
     location: LocationEntity,
     user: UserEntity,
   ): Promise<RestaurantEntity[]> {
-    await this.transactionRepository.getTransactionsByUserId(user.id!);
+    const transaction = new TransactionEntity();
+    transaction.operation = 'getRestaurantsByLocation';
+    transaction.date = new Date();
+    transaction.description = `User ${user.id} requested restaurants in location ${location.latitude}, ${location.longitude}`;
+
+    await this.transactionRepository.registerTransaction(transaction, user.id!);
 
     return await this.restaurantRepository.getRestaurantsByLocation(location);
   }
@@ -26,7 +32,12 @@ export default class RestaurantUseCase {
     city: CityEntity,
     user: UserEntity,
   ): Promise<RestaurantEntity[]> {
-    await this.transactionRepository.getTransactionsByUserId(user.id!);
+    const transaction = new TransactionEntity();
+    transaction.operation = 'getRestaurantsByCity';
+    transaction.date = new Date();
+    transaction.description = `User ${user.id} requested restaurants in city ${city.name}`;
+
+    await this.transactionRepository.registerTransaction(transaction, user.id!);
 
     const location = await this.locationRepository.getLocationByCity(city);
     return await this.restaurantRepository.getRestaurantsByLocation(location);
