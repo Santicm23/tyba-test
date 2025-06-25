@@ -22,7 +22,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - ${API_PORT}:3000
     environment:
@@ -34,3 +34,6 @@ services:
       - db
     env_file:
       - .env
+
+volumes:
+  db_volume:
