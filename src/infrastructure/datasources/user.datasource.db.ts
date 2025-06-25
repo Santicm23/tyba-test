@@ -1,5 +1,5 @@
 import prismaClient from '@/config/db/prisma';
-import { EncryptAdapter } from '@/config/security/encrypt';
+import EncryptAdapter from '@/config/security/encrypt';
 import UserDataSource from '@/domain/datasources/user.datasource';
 import LoginInputDTO from '@/domain/dtos/input/login.input.dto';
 import RegisterInputDTO from '@/domain/dtos/input/register.input.dto';

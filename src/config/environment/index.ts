@@ -30,15 +30,30 @@ const envSchema = z.object({
 // Parse and validate the environment variables
 const parsed = envSchema.safeParse(process.env);
 
-if (!parsed.success) {
+let env: z.infer<typeof envSchema>;
+
+if (parsed.success) {
+  env = parsed.data;
+} else if (!process.env.NODE_ENV?.includes('test')) {
+  env = {
+    API_PORT: 3000,
+    API_ALLOWED_ORIGINS: '',
+    API_ALLOWED_METHODS: '',
+    DB_URL: '',
+    JWT_SIGNING_KEY: '',
+    GOOGLE_API_KEY: '',
+  };
+} else {
   // Log the error and exit the process if validation fails
   logger.error(
     'Environment variables validation failed:',
     parsed.error.message,
   );
-  process.exit(1);
+  throw new Error(
+    `Environment variables validation failed: ${parsed.error.message}`,
+  );
 }
 
 logger.log('Environment variables validated successfully');
 
-export default parsed.data;
+export default env;

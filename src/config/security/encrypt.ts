@@ -1,6 +1,6 @@
 import { compareSync, hashSync } from 'bcryptjs';
 
-export class EncryptAdapter {
+export default class EncryptAdapter {
   static hash(text: string): string {
     return hashSync(text);
   }
