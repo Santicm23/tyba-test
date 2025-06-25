@@ -4,11 +4,14 @@ import AuthUseCase from '@/domain/usecases/auth.usecase';
 import UserRepositoryImpl from '@/infrastructure/repositories/user.repository.impl';
 import UserDataSourceDBImpl from '@/infrastructure/datasources/user.datasource.db';
 import RegisterInputDTO from '@/domain/dtos/input/register.input.dto';
+import TransactionRepositoryImpl from '@/infrastructure/repositories/transaction.repository.impl';
+import TransactionDataSourceDBImpl from '@/infrastructure/datasources/transaction.datasource.db';
 
 @Controller('auth')
 export class AuthController {
   private readonly authUseCase: AuthUseCase = new AuthUseCase(
     new UserRepositoryImpl(new UserDataSourceDBImpl()),
+    new TransactionRepositoryImpl(new TransactionDataSourceDBImpl()),
   );
 
   @Post('login')

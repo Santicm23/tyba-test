@@ -9,6 +9,6 @@ export default class RestaurantRepositoryImpl implements RestaurantRepository {
   async getRestaurantsByLocation(
     location: LocationEntity,
   ): Promise<RestaurantEntity[]> {
-    return this.restaurantDataSource.getRestaurantsByLocation(location);
+    return await this.restaurantDataSource.getRestaurantsByLocation(location);
   }
 }

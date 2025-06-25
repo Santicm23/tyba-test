@@ -1,4 +1,5 @@
 import JWTAdapter from '@/config/security/jwt';
+import UserEntity from '@/domain/entities/user.entity';
 import {
   CanActivate,
   ExecutionContext,
@@ -23,6 +24,8 @@ export class AuthGuard implements CanActivate {
     if (!JWTAdapter.verifyToken(token)) {
       throw new UnauthorizedException('Invalid token');
     }
+
+    request.user = JWTAdapter.decodeToken<UserEntity>(token);
 
     return true;
   }

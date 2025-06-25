@@ -13,12 +13,19 @@ export default class JWTAdapter {
     });
   }
 
-  static verifyToken<T>(token: string): T | null {
+  static verifyToken<T>(token: string): T | undefined {
     try {
       return jwt.verify(token, env.JWT_SIGNING_KEY) as T;
     } catch (error) {
       console.error('JWT verification failed:', error);
-      return null;
+    }
+  }
+
+  static decodeToken<T>(token: string): T | undefined {
+    try {
+      return jwt.decode(token) as T;
+    } catch (error) {
+      console.error('JWT decoding failed:', error);
     }
   }
 }

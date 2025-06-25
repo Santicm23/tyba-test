@@ -8,10 +8,10 @@ export default class UserRepositoryImpl implements UserRepository {
   constructor(private readonly userDataSource: UserDataSource) {}
 
   async login(loginDTO: LoginInputDTO): Promise<UserEntity> {
-    return this.userDataSource.login(loginDTO);
+    return await this.userDataSource.login(loginDTO);
   }
 
   async register(registerDTO: RegisterInputDTO): Promise<UserEntity> {
-    return this.userDataSource.register(registerDTO);
+    return await this.userDataSource.register(registerDTO);
   }
 }

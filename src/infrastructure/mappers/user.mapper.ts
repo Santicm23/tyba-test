@@ -1,11 +1,10 @@
 import { plainToClass } from 'class-transformer';
 
 import UserEntity from '@/domain/entities/user.entity';
+import { User } from '@prisma/client';
 
 export default class UserMapper {
-  static userEntityFromObject(object: { [key: string]: any }) {
-    return plainToClass(UserEntity, object, {
-      excludeExtraneousValues: true,
-    });
+  static userEntityFromDB(user: User) {
+    return plainToClass(UserEntity, user);
   }
 }

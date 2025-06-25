@@ -19,7 +19,7 @@ export default class UserDataSourceDBImpl implements UserDataSource {
       throw new InvalidCredentialsError('Invalid email or password');
     }
 
-    return UserMapper.userEntityFromObject(user);
+    return UserMapper.userEntityFromDB(user);
   }
 
   async register(registerDTO: RegisterInputDTO): Promise<UserEntity> {
@@ -39,11 +39,9 @@ export default class UserDataSourceDBImpl implements UserDataSource {
         password: hashedPassword,
         name: registerDTO.name,
       },
-      select: { id: true, email: true, name: true },
+      select: { id: true, email: true, name: true, password: true },
     });
 
-    return UserMapper.userEntityFromObject(
-      UserMapper.userEntityFromObject(newUser),
-    );
+    return UserMapper.userEntityFromDB(newUser);
   }
 }
