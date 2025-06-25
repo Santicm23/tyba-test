@@ -11,4 +11,8 @@ export default class RestaurantEntity {
 
   @IsObject()
   public location: LocationEntity;
+
+  @IsOptional()
+  @IsString()
+  public address?: string;
 }

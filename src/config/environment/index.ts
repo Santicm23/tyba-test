@@ -24,6 +24,7 @@ const envSchema = z.object({
   API_ALLOWED_METHODS: z.string().default('GET,POST,PUT,DELETE'),
   DB_URL: z.string().min(1, 'DB_URL is required'),
   JWT_SIGNING_KEY: z.string().min(1, 'JWT_SIGNING_KEY is required'),
+  GOOGLE_API_KEY: z.string().min(1, 'GOOGLE_API_KEY is required'),
 });
 
 // Parse and validate the environment variables
