@@ -47,4 +47,15 @@ export default class AuthUseCase {
       user,
     };
   }
+
+  async logout(userId: string, token: string): Promise<void> {
+    await this.userRepository.logout(userId, token);
+
+    const transaction = new TransactionEntity();
+    transaction.operation = 'logout';
+    transaction.date = new Date();
+    transaction.description = `User ${userId} logged out`;
+
+    await this.transactionRepository.registerTransaction(transaction, userId);
+  }
 }

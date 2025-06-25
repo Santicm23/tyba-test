@@ -44,4 +44,24 @@ export default class UserDataSourceDBImpl implements UserDataSource {
 
     return UserMapper.userEntityFromDB(newUser);
   }
+
+  async logout(userId: string, token: string): Promise<void> {
+    await prismaClient.blacklistToken.create({
+      data: {
+        userId,
+        token,
+      },
+    });
+  }
+
+  async validToken(userId: string, token: string): Promise<boolean> {
+    const blacklistedToken = await prismaClient.blacklistToken.findUnique({
+      where: {
+        userId,
+        token,
+      },
+    });
+
+    return !blacklistedToken;
+  }
 }

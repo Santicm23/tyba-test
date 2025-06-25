@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     interface Request {
       user?: UserEntity; // The '?' makes it optional
+      token?: string; // Optional token property
     }
   }
 }

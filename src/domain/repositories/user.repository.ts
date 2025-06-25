@@ -5,4 +5,6 @@ import UserEntity from '@/domain/entities/user.entity';
 export default abstract class UserRepository {
   abstract login(loginDTO: LoginInputDTO): Promise<UserEntity>;
   abstract register(registerDTO: RegisterInputDTO): Promise<UserEntity>;
+  abstract logout(userId: string, token: string): Promise<void>;
+  abstract validToken(userId: string, token: string): Promise<boolean>;
 }
